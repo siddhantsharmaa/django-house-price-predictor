@@ -1,0 +1,120 @@
+{% extends 'user_parent.html' %}
+{% load static %}
+{% block main %}
+
+<style>
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .pred-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    .pred-table thead tr {
+        background: #0b1f3a;
+        color: #fff;
+    }
+
+    .pred-table thead th {
+        padding: 10px 12px;
+        font-weight: 500;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .pred-table thead th:first-child {
+        border-radius: 10px 0 0 0;
+    }
+
+    .pred-table thead th:last-child {
+        border-radius: 0 10px 0 0;
+    }
+
+    .pred-table tbody tr {
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+        animation: fadeSlideIn 0.4s ease both;
+        transition: background 0.2s;
+    }
+
+    .pred-table tbody tr:hover {
+        background: #f8f4ee;
+    }
+
+    .pred-table tbody td {
+        padding: 10px 12px;
+    }
+
+    .pred-table tbody td:last-child {
+        font-weight: 500;
+        color: #c8a84b;
+    }
+
+    .badge-id {
+        background: #0b1f3a;
+        color: #e8cc7e;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-size: 12px;
+    }
+
+    .table-wrap {
+        border-radius: 12px;
+        border: 0.5px solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+</style>
+
+<div class="table-wrap mt-4" style="overflow-x:auto;">
+    <table class="pred-table">
+        <thead>
+            <tr>
+                <th><i class="bi bi-hash"  style="color:#c8a84b;"></i>ID</th>
+                <th><i class="bi bi-cash-coin"  style="color:#c8a84b;"></i> Income</th>
+                <th><i class="bi bi-building"  style="color:#c8a84b;"></i> Age</th>
+                <th><i class="bi bi-door-open"  style="color:#c8a84b;"></i> Rooms</th>
+                <th><i class="bi bi-safe"  style="color:#c8a84b;"></i> Bedrooms</th>
+                <th><i class="bi bi-people"  style="color:#c8a84b;"></i> Population</th>
+                <th><i class="bi bi-house-check"  style="color:#c8a84b;"></i> Occupancy</th>
+                <th><i class="bi bi-arrow-up"  style="color:#c8a84b;"></i> Latitude</th>
+                <th><i class="bi bi-arrow-right"  style="color:#c8a84b;"></i> Longitude</th>
+                <th><i class="bi bi-tags"  style="color:#c8a84b;"></i> Predicted Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in his %}
+            <!-- 👇 animation delay har row ke liye alag -->
+            <tr style="animation-delay: {{ forloop.counter0 }}00ms">
+                <td><span class="badge-id">#{{ forloop.counter }}</span></td>
+                <td>{{ h.medinc }}</td>
+                <td>{{ h.houseage }}</td>
+                <td>{{ h.averooms }}</td>
+                <td>{{ h.avebedrms }}</td>
+                <td>{{ h.population }}</td>
+                <td>{{ h.aveoccup }}</td>
+                <td>{{ h.latitude }}</td>
+                <td>{{ h.longitude }}</td>
+                <td>${{ h.res|floatformat:0 }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10" style="text-align:center; padding:30px; color:#4a5f7a;">
+                    No predictions yet!
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock main %}

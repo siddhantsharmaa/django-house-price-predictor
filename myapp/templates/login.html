@@ -1,0 +1,511 @@
+{% extends 'parent.html' %}
+{% block main %}
+
+<style>
+    /* ════════════════════════════════════
+     LOGIN SECTION
+  ════════════════════════════════════ */
+    .login-section {
+        min-height: calc(100vh - 52px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 16px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Floating background circles - pure CSS animation */
+    .login-section::before,
+    .login-section::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.07;
+        pointer-events: none;
+    }
+
+    .login-section::before {
+        width: 500px;
+        height: 500px;
+        background: var(--navy);
+        top: -150px;
+        left: -150px;
+        animation: floatCircle 8s ease-in-out infinite;
+    }
+
+    .login-section::after {
+        width: 350px;
+        height: 350px;
+        background: var(--gold);
+        bottom: -100px;
+        right: -80px;
+        animation: floatCircle 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes floatCircle {
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(20px, 20px) scale(1.05);
+        }
+    }
+
+    /* ════════════════════════════════════
+     CARD
+  ════════════════════════════════════ */
+    .login-card {
+        width: 100%;
+        max-width: 860px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 24px 60px rgba(11, 31, 58, 0.18), 0 4px 12px rgba(11, 31, 58, 0.08);
+        animation: cardAppear 0.7s cubic-bezier(.22, .68, 0, 1.2) both;
+        position: relative;
+        z-index: 1;
+    }
+
+    @keyframes cardAppear {
+        from {
+            opacity: 0;
+            transform: translateY(40px) scale(0.97);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    /* ── LEFT PANEL ── */
+    .login-left {
+        background: var(--navy);
+        padding: 52px 36px;
+        position: relative;
+        overflow: hidden;
+        min-height: 100%;
+    }
+
+    /* Dot grid pattern */
+    .login-left::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(circle, rgba(200, 168, 75, 0.18) 1px, transparent 1px);
+        background-size: 28px 28px;
+        pointer-events: none;
+    }
+
+    /* Gold arc bottom-left */
+    .login-left::after {
+        content: '';
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        border: 40px solid rgba(200, 168, 75, 0.07);
+        bottom: -80px;
+        left: -80px;
+        pointer-events: none;
+    }
+
+    .left-icon {
+        font-size: 64px;
+        line-height: 1;
+        animation: iconPop 0.8s 0.3s cubic-bezier(.22, .68, 0, 1.4) both;
+        filter: drop-shadow(0 4px 12px rgba(200, 168, 75, 0.35));
+    }
+
+    @keyframes iconPop {
+        from {
+            opacity: 0;
+            transform: scale(0.5) rotate(-15deg);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) rotate(0deg);
+        }
+    }
+
+    .left-title {
+        font-family: 'Source Serif 4', serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        animation: fadeUp 0.7s 0.45s both;
+    }
+
+    .left-title span {
+        color: var(--gold);
+    }
+
+    .left-subtitle {
+        font-size: 13.5px;
+        color: rgba(255, 255, 255, 0.60);
+        line-height: 1.7;
+        animation: fadeUp 0.7s 0.55s both;
+        max-width: 210px;
+    }
+
+    /* Feature pills */
+    .feature-pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(200, 168, 75, 0.18);
+        border-radius: 30px;
+        padding: 8px 14px;
+        font-size: 12.5px;
+        color: rgba(255, 255, 255, 0.75);
+        transition: background 0.25s, border-color 0.25s;
+        animation: fadeUp 0.7s 0.65s both;
+        cursor: default;
+    }
+
+    .feature-pill:hover {
+        background: rgba(200, 168, 75, 0.12);
+        border-color: var(--gold);
+        color: #fff;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── RIGHT PANEL ── */
+    .login-right {
+        background: #fff;
+        padding: 52px 44px;
+    }
+
+    .form-headline {
+        font-family: 'Source Serif 4', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--navy);
+        animation: fadeUp 0.7s 0.2s both;
+    }
+
+    .form-tagline {
+        font-size: 13.5px;
+        color: var(--slate);
+        animation: fadeUp 0.7s 0.3s both;
+    }
+
+    /* ── Custom Input Styling ── */
+    .input-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--slate);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+    }
+
+    .input-icon-wrap {
+        position: relative;
+    }
+
+    .input-icon-wrap .field-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 16px;
+        pointer-events: none;
+        z-index: 5;
+        transition: color 0.2s;
+    }
+
+    .input-icon-wrap .form-control {
+        padding-left: 42px;
+        border: 1.5px solid #d8dce6;
+        border-radius: 10px;
+        background: var(--cream);
+        font-size: 14.5px;
+        color: var(--navy);
+        font-family: 'Source Sans 3', sans-serif;
+        transition: border-color 0.25s, box-shadow 0.25s, background 0.2s;
+    }
+
+    .input-icon-wrap .form-control:focus {
+        border-color: var(--gold);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+        color: var(--navy);
+    }
+
+    /* Password toggle button */
+    .btn-toggle-pw {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        color: var(--slate);
+        padding: 4px;
+        z-index: 5;
+        transition: color 0.2s;
+        line-height: 1;
+    }
+
+    .btn-toggle-pw:hover {
+        color: var(--gold);
+    }
+
+    /* Login button */
+    .btn-login {
+        background: var(--navy);
+        color: #fff;
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        padding: 13px;
+        position: relative;
+        overflow: hidden;
+        transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+        letter-spacing: 0.3px;
+        animation: fadeUp 0.7s 0.58s both;
+    }
+
+    /* Gold shimmer sweep on hover */
+    .btn-login::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 60%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(200, 168, 75, 0.25), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-login:hover::before {
+        left: 160%;
+    }
+
+    .btn-login:hover {
+        background: var(--slate);
+        box-shadow: 0 6px 20px rgba(11, 31, 58, 0.22);
+        transform: translateY(-1px);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    /* OR Divider */
+    .or-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: fadeUp 0.7s 0.64s both;
+    }
+
+    .or-divider span {
+        font-size: 12.5px;
+        color: #b0b8c8;
+        white-space: nowrap;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e5e8ef;
+    }
+
+    /* Social buttons */
+    .btn-social {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 11px;
+        border: 1.5px solid #e0e4ed;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--navy);
+        cursor: pointer;
+        font-family: 'Source Sans 3', sans-serif;
+        transition: border-color 0.22s, background 0.22s, transform 0.15s;
+        animation: fadeUp 0.7s 0.70s both;
+    }
+
+    .btn-social:hover {
+        border-color: var(--gold);
+        background: var(--cream);
+        transform: translateY(-1px);
+    }
+
+    /* Register link */
+    .register-link {
+        font-size: 13.5px;
+        color: var(--slate);
+        animation: fadeUp 0.7s 0.76s both;
+    }
+
+    .register-link a {
+        color: var(--gold);
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .register-link a:hover {
+        color: var(--navy);
+        text-decoration: underline;
+    }
+
+    /* Animate inputs stagger */
+    .anim-1 {
+        animation: fadeUp 0.7s 0.35s both;
+    }
+
+    .anim-2 {
+        animation: fadeUp 0.7s 0.43s both;
+    }
+
+    /* Mobile: hide left panel */
+    @media (max-width: 700px) {
+        .login-left {
+            display: none !important;
+        }
+
+        .login-right {
+            padding: 36px 24px;
+        }
+    }
+</style>
+
+<div class="login-section">
+    <div class="login-card row g-0" style="position:relative; z-index:1;">
+
+        <!-- ══ LEFT PANEL ══ -->
+        <div class="col-lg-5 login-left d-flex flex-column justify-content-center align-items-center text-center">
+
+            <!-- Big icon -->
+            <div class="left-icon mb-3">🏠</div>
+
+            <!-- Title -->
+            <h2 class="left-title mb-2">House <span>Price</span><br>Predictor</h2>
+
+            <!-- Subtitle -->
+            <p class="left-subtitle mb-4">Smart ML predictions to help you find the right price.</p>
+
+            <!-- Feature pills -->
+            <div class="d-flex flex-column gap-2 w-100">
+                <div class="feature-pill"><span>🤖</span> AI-powered predictions</div>
+                <div class="feature-pill"><span>📊</span> Real-time data analysis</div>
+                <div class="feature-pill"><span>🔒</span> Secure &amp; private</div>
+                <div class="feature-pill"><span>📜</span> Save your history</div>
+            </div>
+
+        </div>
+
+        <!-- ══ RIGHT PANEL ══ -->
+        <div class="col-lg-7 login-right d-flex flex-column justify-content-center">
+
+            <h3 class="form-headline mb-1">Welcome back 👋</h3>
+            <p class="form-tagline mb-4">Login to continue to your dashboard</p>
+
+            <!-- Django error messages -->
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning rounded-3 py-2 px-3 mb-3" style="font-size:13.5px;">
+                 ⚠️ {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <!-- LOGIN FORM -->
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+
+                <!-- Username field -->
+                <div class="mb-3 anim-1">
+                    <label class="input-label mb-1 d-block" for="username">Username</label>
+                    <div class="input-icon-wrap">
+                        <span class="field-icon">📧</span>
+                        <input type="email" id="username" name="email" class="form-control py-2"
+                            placeholder="Enter your username" required autocomplete="username">
+                    </div>
+                </div>
+
+                <!-- Password field -->
+                <div class="mb-4 anim-2">
+                    <label class="input-label mb-1 d-block" for="password">Password</label>
+                    <div class="input-icon-wrap">
+                        <span class="field-icon">🔑</span>
+                        <input type="password" id="password" name="password" class="form-control py-2"
+                            placeholder="Enter your password" required autocomplete="current-password">
+                        <!-- Password show/hide — Bootstrap mein built-in nahi hai, isliye chhota JS -->
+                        <button type="button" class="btn-toggle-pw" onclick="togglePassword()"
+                            title="Show / hide password">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn-login btn w-100 mb-3">
+                    🔓 Login to My Account
+                </button>
+
+            </form>
+
+            <!-- OR divider -->
+            <div class="or-divider mb-3">
+                <span>or continue with</span>
+            </div>
+
+            <!-- Social buttons -->
+            <div class="d-flex gap-2 mb-4">
+                <button class="btn-social" type="button">
+                    <span>🌐</span> Google
+                </button>
+
+            </div>
+
+            <!-- Register link -->
+            <p class="register-link text-center mb-0">
+                Don't have an account? <a href="{% url 'register' %}">Create one free →</a>
+            </p>
+
+        </div>
+        <!-- end right panel -->
+
+    </div>
+</div>
+
+<!-- ══ PASSWORD TOGGLE JS (sirf 4 lines) ══ -->
+<script>
+    function togglePassword() {
+        const inp = document.getElementById('password');
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+</script>
+
+{% endblock main %}

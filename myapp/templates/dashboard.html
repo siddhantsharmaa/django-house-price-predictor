@@ -1,0 +1,219 @@
+{% extends 'user_parent.html' %}
+
+{% block main %}
+
+<style>
+    @keyframes fadeUp {
+        from { opacity:0; transform:translateY(20px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes countUp {
+        from { opacity:0; transform:scale(0.8); }
+        to   { opacity:1; transform:scale(1); }
+    }
+    @keyframes pulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(200,168,75,0.3); }
+        50%      { box-shadow: 0 0 0 8px rgba(200,168,75,0); }
+    }
+    .dash-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        border: 0.5px solid rgba(0,0,0,0.08);
+        width: 100%;
+        animation: fadeUp 0.5s ease both;
+        transition: border-color 0.3s;
+    }
+    .dash-card:hover { border-color: #c8a84b; }
+    .card-label {
+        font-size: 12px;
+        color: var(--slate);
+        font-weight: 500;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .card-label i { color: #c8a84b; }
+    .avatar-circle {
+        width: 86px; height: 86px;
+        border-radius: 50%;
+        background: #0b1f3a;
+        color: #c8a84b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0 auto;
+        animation: pulse 2.5s infinite;
+        border: 3px solid #c8a84b;
+    }
+    .camera-btn {
+        position: absolute;
+        bottom: 0; right: 0;
+        background: #c8a84b;
+        color: #0b1f3a;
+        border-radius: 50%;
+        width: 26px; height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        border: 2px solid white;
+        cursor: pointer;
+    }
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--slate);
+        padding: 6px 0;
+        border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row i { color: #c8a84b; min-width: 16px; }
+    .info-val { color: var(--navy); font-weight: 600; margin-left: auto; font-size: 13px; }
+    .stat-num {
+        font-size: 42px;
+        font-weight: 700;
+        color: #c8a84b;
+        animation: countUp 0.7s 0.4s ease both;
+    }
+    .price-val {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--navy);
+        animation: countUp 0.7s 0.5s ease both;
+    }
+    .quick-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 10px 20px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+    .quick-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+</style>
+
+<!-- Welcome -->
+<div class="row mt-4" style="animation: fadeUp 0.4s ease both;">
+    <div class="col-12">
+        <h4 style="color:var(--navy);">Welcome, {{ request.user.first_name }}! 👋</h4>
+        <p style="color:var(--slate); font-size:14px;">Here you can see all your activities.</p>
+    </div>
+</div>
+
+<!-- Cards -->
+<div class="row mt-3 gy-3 align-items-stretch">
+
+    <!-- Card 1 — Profile -->
+    <div class="col-lg-4 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.1s;">
+
+            <div class="card-label">
+                <i class="bi bi-person-circle"></i> Profile
+            </div>
+
+            <!-- Photo -->
+            <div style="text-align:center; margin-bottom:14px;">
+                <form method="POST"
+                      action="{% url 'update_photo' %}"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="photo" accept="image/*"
+                           id="photoInput" style="display:none;"
+                           onchange="this.form.submit()">
+
+                    <label for="photoInput"
+                           style="cursor:pointer; position:relative; display:inline-block;">
+                        {% if user_profile.photo %}
+                            <img src="{{ user_profile.photo.url }}"
+                                 style="width:86px; height:86px; border-radius:50%;
+                                        object-fit:cover; border:3px solid #c8a84b;
+                                        animation: pulse 2.5s infinite;">
+                        {% else %}
+                            <div class="avatar-circle">
+                                {{ request.user.first_name|first|upper }}
+                            </div>
+                        {% endif %}
+                        <div class="camera-btn">
+                            <i class="bi bi-camera-fill"></i>
+                        </div>
+                    </label>
+                </form>
+            </div>
+
+            <!-- Info -->
+            <div class="info-row">
+                <i class="bi bi-person"></i> Name
+                <span class="info-val">{{ request.user.first_name }} {{ request.user.last_name }}</span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-envelope"></i> Email
+                <span class="info-val">{{ request.user.email }}</span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-phone"></i> Phone
+                <span class="info-val">{{ user_profile.phone }}</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Card 2 — Total Predictions -->
+    <div class="col-lg-4 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.2s;">
+            <div class="card-label">
+                <i class="bi bi-graph-up"></i> Total Predictions
+            </div>
+            <div class="stat-num">{{ total_predictions }}</div>
+            <p style="color:var(--slate); font-size:13px; margin-top:6px;">
+                You have made this many predictions so far!
+            </p>
+        </div>
+    </div>
+
+    <!-- Card 3 — Last Prediction -->
+    <div class="col-lg-4 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.3s;">
+            <div class="card-label">
+                <i class="bi bi-clock-history"></i> Last Prediction
+            </div>
+            {% if last_prediction %}
+                <div class="price-val">${{ last_prediction.res|floatformat:0 }}</div>
+                <p style="color:var(--slate); font-size:13px; margin-top:6px;">
+                    This was your last predicted price!
+                </p>
+            {% else %}
+                <p style="color:var(--slate); font-size:13px;">
+                    No predictions made yet!
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<!-- Quick Links -->
+<div class="row mt-4" style="animation: fadeUp 0.5s 0.5s ease both; opacity:0; animation-fill-mode:both;">
+    <div class="col-12">
+        <a href="{% url 'prediction' %}" class="quick-btn"
+           style="background:#c8a84b; color:#0b1f3a; margin-right:10px;">
+            <i class="bi bi-graph-up"></i> New Prediction
+        </a>
+        <a href="{% url 'history' %}" class="quick-btn"
+           style="background:#0b1f3a; color:white;">
+            <i class="bi bi-clock-history"></i> View History
+        </a>
+    </div>
+</div>
+
+{% endblock main %}

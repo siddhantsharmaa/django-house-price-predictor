@@ -1,0 +1,146 @@
+{% extends 'parent.html' %}
+{% block main %}
+
+<style>
+    @keyframes fadeUp {
+        from { opacity:0; transform:translateY(20px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
+    .login-card {
+        max-width: 400px;
+        margin: 70px auto;
+        background: white;
+        border-radius: 16px;
+        padding: 36px;
+        border: 0.5px solid rgba(0,0,0,0.08);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        animation: fadeUp 0.5s ease both;
+    }
+    .logo-circle {
+        width: 64px; height: 64px;
+        border-radius: 50%;
+        background: #0b1f3a;
+        color: #c8a84b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 16px;
+        border: 3px solid #c8a84b;
+    }
+    .form-input {
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.12);
+        font-size: 13px;
+        margin-bottom: 12px;
+        outline: none;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    .form-input:focus { border-color: #c8a84b; }
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background: #0b1f3a;
+        color: #c8a84b;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+    .submit-btn:hover { opacity:0.85; transform:translateY(-1px); }
+    .divider {
+        text-align: center;
+        font-size: 12px;
+        color: var(--slate);
+        margin: 16px 0;
+    }
+    .user-link {
+        display: block;
+        text-align: center;
+        font-size: 13px;
+        color: var(--slate);
+        text-decoration: none;
+        margin-top: 12px;
+        transition: color 0.2s;
+    }
+    .user-link:hover { color: #c8a84b; }
+</style>
+
+<div class="login-card">
+
+    <!-- Logo -->
+    <div class="logo-circle">
+        <i class="bi bi-shield-lock"></i>
+    </div>
+
+    <!-- Title -->
+    <h5 style="text-align:center; color:var(--navy); margin-bottom:4px;">
+        Admin Login
+    </h5>
+    <p style="text-align:center; color:var(--slate); font-size:13px; margin-bottom:20px;">
+        Only admins can access this page.
+    </p>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div id="alertMsg" style="padding:10px 14px; border-radius:8px;
+                        margin-bottom:14px; font-size:13px;
+                        {% if message.tags == 'error' %}
+                            background:#ffe0e0; color:red;
+                        {% else %}
+                            background:#e0ffe0; color:green;
+                        {% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <label style="font-size:12px; color:var(--slate); font-weight:600;">
+            USERNAME
+        </label>
+        <input class="form-input" type="text"
+               name="username" placeholder="Enter username" required>
+
+        <label style="font-size:12px; color:var(--slate); font-weight:600;">
+            PASSWORD
+        </label>
+        <input class="form-input" type="password"
+               name="password" placeholder="Enter password" required>
+
+        <button class="submit-btn" type="submit">
+            <i class="bi bi-shield-check"></i> Login as Admin
+        </button>
+    </form>
+
+    <div class="divider">── or ──</div>
+
+    <!-- User Login Link -->
+    <a href="{% url 'login' %}" class="user-link">
+        <i class="bi bi-person"></i> Login as Normal User
+    </a>
+
+</div>
+
+<!-- Auto hide message -->
+<script>
+    setTimeout(function() {
+        var msg = document.getElementById('alertMsg');
+        if (msg) {
+            msg.style.transition = 'opacity 1s';
+            msg.style.opacity = '0';
+            setTimeout(function() { msg.style.display = 'none'; }, 1000);
+        }
+    }, 3000);
+</script>
+
+{% endblock main %}

@@ -1,0 +1,420 @@
+{% extends 'parent.html' %}
+{% load static %}
+{% block main %}
+
+<style>
+    /* ══════════════════════════════════════════
+       CAROUSEL — navbar se bilkul chipka hua
+    ══════════════════════════════════════════ */
+
+    /* Yeh important hai: container ki wajah se carousel andar chala jata tha.
+       Is page pe sirf carousel ke liye container hata diya. */
+    .page-wrapper>.container {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .carousel-item {
+        height: 62vh;
+        /* pehle 78vh tha — bahut bada tha */
+        min-height: 380px;
+    }
+
+    .carousel-video {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        filter: brightness(38%);
+    }
+
+    .carousel-caption {
+        bottom: 20%;
+        /* pehle 28% tha */
+        left: 10%;
+        right: 10%;
+        text-align: left;
+        /* professional left-align */
+    }
+
+    .carousel-caption h1 {
+        font-family: 'Source Serif 4', serif;
+        font-size: 36px;
+        /* pehle 52px tha — bahut bada tha */
+        font-weight: 700;
+        line-height: 1.25;
+        margin-bottom: 8px;
+        animation: fadeUp 0.9s ease both;
+    }
+
+    .carousel-caption p {
+        font-size: 14px;
+        /* pehle 18px tha */
+        font-weight: 300;
+        opacity: 0.88;
+        margin-bottom: 0;
+        animation: fadeUp 1.2s ease both;
+    }
+
+    .btn-main {
+        display: inline-block;
+        background: var(--gold);
+        color: var(--navy);
+        padding: 9px 24px;
+        /* pehle 12px 32px tha */
+        border-radius: 3px;
+        font-family: 'Source Sans 3', sans-serif;
+        font-weight: 600;
+        font-size: 12.5px;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        border: none;
+        text-decoration: none;
+        transition: 0.25s;
+        animation: fadeUp 1.5s ease both;
+        margin-top: 16px;
+    }
+
+    .btn-main:hover {
+        background: var(--gold-lt);
+        color: var(--navy);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(200, 168, 75, 0.32);
+    }
+
+    /* ══════════════════════════════════════════
+       SHARED SECTION STYLES
+    ══════════════════════════════════════════ */
+    .inner-container {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    .section-title {
+        font-family: 'Source Serif 4', serif;
+        font-size: 22px;
+        /* pehle bahut badi thi */
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 0;
+    }
+
+    .gold-divider {
+        width: 42px;
+        height: 2px;
+        /* pehle 3px tha */
+        background: var(--gold);
+        border-radius: 2px;
+        margin: 10px auto 14px;
+    }
+
+    .section-sub {
+        font-size: 13px;
+        color: var(--slate);
+    }
+
+    /* ══════════════════════════════════════════
+       ABOUT SECTION
+    ══════════════════════════════════════════ */
+    .about-section {
+        background: #fff;
+        border-radius: 10px;
+        /* pehle 16px tha */
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+        padding: 28px;
+        /* pehle p-4 = 24px, thoda zyada tha */
+        margin: 15px auto;
+        /* pehle my-5 = 48px margin */
+    }
+
+    .about-section img {
+        border-radius: 8px;
+        width: 100%;
+        height: 220px;
+        /* fixed height — consistent look */
+        object-fit: cover;
+    }
+
+    .about-section p {
+        font-size: 13px;
+        color: var(--slate);
+        line-height: 1.65;
+        margin-bottom: 8px;
+    }
+
+    /* ══════════════════════════════════════════
+       FEATURES SECTION
+    ══════════════════════════════════════════ */
+    .features-section {
+        margin: 36px auto;
+    }
+
+    .feature-card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+        transition: 0.3s;
+        border-top: 2px solid transparent;
+        padding: 20px 16px;
+        /* pehle p-4 = 24px tha */
+    }
+
+    .feature-card:hover {
+        transform: translateY(-6px);
+        /* pehle -10px tha */
+        border-top-color: var(--gold);
+        box-shadow: 0 12px 28px rgba(11, 31, 58, 0.13);
+    }
+
+    .icon-box {
+        width: 48px;
+        /* pehle 68px tha — bahut bada */
+        height: 48px;
+        background: var(--navy);
+        color: var(--gold);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 20px;
+        /* pehle 28px tha */
+        font-weight: bold;
+    }
+
+    .feature-card h5 {
+        font-family: 'Source Serif 4', serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 6px;
+    }
+
+    .feature-card p {
+        font-size: 12.5px;
+        color: var(--slate);
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════════════
+       PREDICTION CTA
+    ══════════════════════════════════════════ */
+    .cta-box {
+        background: linear-gradient(135deg, var(--navy), #162d52);
+        border-radius: 10px;
+        color: #fff;
+        padding: 36px 24px;
+        /* pehle p-5 = 48px tha */
+        margin: 36px auto;
+        text-align: center;
+    }
+
+    .cta-box h2 {
+        font-family: 'Source Serif 4', serif;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .cta-box p {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.68);
+        margin: 0;
+    }
+
+    /* ══════════════════════════════════════════
+       MOBILE
+    ══════════════════════════════════════════ */
+    @media (max-width: 768px) {
+        .carousel-item {
+            height: 52vh;
+            min-height: 300px;
+        }
+
+        .carousel-caption h1 {
+            font-size: 24px;
+        }
+
+        .carousel-caption {
+            bottom: 14%;
+            left: 6%;
+            right: 6%;
+        }
+
+        .about-section img {
+            height: 180px;
+        }
+    }
+</style>
+<!-- ─── CAROUSEL ─── -->
+<div id="houseCarousel" class="carousel slide carousel-fade">
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="2"></button>
+    </div>
+
+    <div class="carousel-inner">
+
+        <div class="carousel-item active">
+            <video autoplay muted playsinline preload="metadata" class="carousel-video">
+                <source src="{% static 'videos/v1.mp4' %}" type="video/mp4">
+            </video>
+            <div class="carousel-caption">
+                <h1>Predict House Prices<br>Smartly</h1>
+                <p>Estimate property values using Machine Learning.</p>
+                <a href="{% url 'prediction' %}" class="btn-main">Start Prediction</a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <video muted playsinline preload="metadata" class="carousel-video">
+                <source src="{% static 'videos/v2.mp4' %}" type="video/mp4">
+            </video>
+            <div class="carousel-caption">
+                <h1>Find Real Estate<br>Value</h1>
+                <p>Get fast and intelligent price estimation.</p>
+                <a href="{% url 'about' %}" class="btn-main">Learn More</a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <video muted playsinline preload="metadata" class="carousel-video">
+                <source src="{% static 'videos/v3.mp4' %}" type="video/mp4">
+            </video>
+            <div class="carousel-caption">
+                <h1>Simple. Fast.<br>Accurate.</h1>
+                <p>A professional system for house price prediction.</p>
+                <a href="{% url 'history' %}" class="btn-main">View History</a>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#houseCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#houseCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
+
+<!-- ─── ABOUT SECTION ─── -->
+<div class="inner-container" id="about">
+    <div class="row align-items-center about-section">
+        <div class="col-md-5">
+            <img src="{% static 'images/img1.jpg' %}">
+        </div>
+        <div class="col-md-7 mt-3 mt-md-0 ps-md-4">
+            <h2 class="section-title">About Our System</h2>
+            <div class="gold-divider" style="margin-left: 0;"></div>
+            <p>House Price Predictor is a smart web application that uses Machine Learning to estimate property prices
+                based on important housing features.</p>
+            <p>It helps users quickly understand estimated house value before buying, selling, or comparing
+                properties.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ─── FEATURES SECTION ─── -->
+<div class="inner-container features-section">
+    <div class="text-center mb-4">
+        <h2 class="section-title">Our Features</h2>
+        <div class="gold-divider"></div>
+        <p class="section-sub">Professional, fast and easy house price prediction.</p>
+    </div>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+            <div class="card feature-card text-center h-100">
+                <div class="icon-box">₹</div>
+                <h5>Price Prediction</h5>
+                <p>Predict house prices using trained ML models.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card text-center h-100">
+                <div class="icon-box">⚡</div>
+                <h5>Fast Result</h5>
+                <p>Get instant estimated house price output.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card feature-card text-center h-100">
+                <div class="icon-box">📊</div>
+                <h5>Prediction History</h5>
+                <p>View and manage your previous prediction records.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ─── PREDICTION CTA ─── -->
+<div class="inner-container">
+    <div class="cta-box">
+        <h2>Ready to Predict?</h2>
+        <p>Enter property details and get an estimated house price instantly.</p>
+        <a href="{% url 'prediction' %}" class="btn-main" style="animation: none;">Go to Prediction Page</a>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const carouselEl = document.getElementById("houseCarousel");
+        const videos = document.querySelectorAll(".carousel-video");
+
+        const carousel = new bootstrap.Carousel(carouselEl, {
+            interval: false,
+            ride: false,
+            wrap: true
+        });
+
+        function pauseAllVideos() {
+            videos.forEach(function (video) {
+                video.pause();
+            });
+        }
+
+        function playCurrentVideo() {
+            pauseAllVideos();
+
+            const activeSlide = carouselEl.querySelector(".carousel-item.active");
+            const activeVideo = activeSlide.querySelector(".carousel-video");
+
+            if (activeVideo) {
+                activeVideo.muted = true;
+                activeVideo.currentTime = 0;
+
+                const playPromise = activeVideo.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(function () {
+                        activeVideo.setAttribute("controls", "controls");
+                    });
+                }
+            }
+        }
+
+        videos.forEach(function (video) {
+            video.addEventListener("ended", function () {
+                carousel.next();
+            });
+        });
+
+        carouselEl.addEventListener("slid.bs.carousel", function () {
+            playCurrentVideo();
+        });
+
+        playCurrentVideo();
+    });
+</script>
+
+{% endblock main %}

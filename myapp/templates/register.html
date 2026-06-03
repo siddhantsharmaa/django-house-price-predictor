@@ -1,0 +1,676 @@
+{% extends 'parent.html' %}
+{% block main %}
+
+<style>
+  /* ════════════════════════════════════
+     REGISTER SECTION
+  ════════════════════════════════════ */
+  .register-section {
+    min-height: calc(100vh - 52px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Floating background circles */
+  .register-section::before,
+  .register-section::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  .register-section::before {
+    width: 500px;
+    height: 500px;
+    background: var(--navy);
+    top: -150px;
+    right: -150px;
+    animation: floatCircle 8s ease-in-out infinite;
+  }
+
+  .register-section::after {
+    width: 350px;
+    height: 350px;
+    background: var(--gold);
+    bottom: -100px;
+    left: -80px;
+    animation: floatCircle 10s ease-in-out infinite reverse;
+  }
+
+  @keyframes floatCircle {
+
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+      transform: translate(20px, 20px) scale(1.05);
+    }
+  }
+
+  /* ════════════════════════════════════
+     CARD
+  ════════════════════════════════════ */
+  .register-card {
+    width: 100%;
+    max-width: 920px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(11, 31, 58, 0.18), 0 4px 12px rgba(11, 31, 58, 0.08);
+    animation: cardAppear 0.7s cubic-bezier(.22, .68, 0, 1.2) both;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes cardAppear {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ── LEFT PANEL ── */
+  .register-left {
+    background: var(--navy);
+    padding: 52px 36px;
+    position: relative;
+    overflow: hidden;
+    min-height: 100%;
+  }
+
+  /* Dot grid pattern */
+  .register-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(200, 168, 75, 0.18) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+
+  /* Gold arc top-right */
+  .register-left::after {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 40px solid rgba(200, 168, 75, 0.07);
+    top: -80px;
+    right: -80px;
+    pointer-events: none;
+  }
+
+  .left-icon {
+    font-size: 60px;
+    line-height: 1;
+    animation: iconPop 0.8s 0.3s cubic-bezier(.22, .68, 0, 1.4) both;
+    filter: drop-shadow(0 4px 12px rgba(200, 168, 75, 0.35));
+  }
+
+  @keyframes iconPop {
+    from {
+      opacity: 0;
+      transform: scale(0.5) rotate(-15deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+
+  .left-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    animation: fadeUp 0.7s 0.45s both;
+  }
+
+  .left-title span {
+    color: var(--gold);
+  }
+
+  .left-subtitle {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.60);
+    line-height: 1.7;
+    animation: fadeUp 0.7s 0.55s both;
+    max-width: 210px;
+  }
+
+  /* Step pills */
+  .step-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(200, 168, 75, 0.18);
+    border-radius: 30px;
+    padding: 9px 14px;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.75);
+    transition: background 0.25s, border-color 0.25s;
+    animation: fadeUp 0.7s 0.65s both;
+    cursor: default;
+  }
+
+  .step-pill:hover {
+    background: rgba(200, 168, 75, 0.12);
+    border-color: var(--gold);
+    color: #fff;
+  }
+
+  .step-number {
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 11px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ── RIGHT PANEL ── */
+  .register-right {
+    background: #fff;
+    padding: 40px 44px;
+  }
+
+  .form-headline {
+    font-family: 'Source Serif 4', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--navy);
+    animation: fadeUp 0.7s 0.2s both;
+  }
+
+  .form-tagline {
+    font-size: 13.5px;
+    color: var(--slate);
+    animation: fadeUp 0.7s 0.3s both;
+  }
+
+  /* ── Input styling ── */
+  .input-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  .input-icon-wrap {
+    position: relative;
+  }
+
+  .input-icon-wrap .field-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .input-icon-wrap .form-control {
+    padding-left: 42px;
+    border: 1.5px solid #d8dce6;
+    border-radius: 10px;
+    background: var(--cream);
+    font-size: 14px;
+    color: var(--navy);
+    font-family: 'Source Sans 3', sans-serif;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.2s;
+  }
+
+  .input-icon-wrap .form-control:focus {
+    border-color: var(--gold);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+    color: var(--navy);
+  }
+
+  /* Password toggle */
+  .btn-toggle-pw {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--slate);
+    padding: 4px;
+    z-index: 5;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+
+  .btn-toggle-pw:hover {
+    color: var(--gold);
+  }
+
+  /* Password strength bar */
+  .strength-bar-wrap {
+    height: 4px;
+    background: #e5e8ef;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.4s ease, background 0.4s ease;
+  }
+
+  .strength-text {
+    font-size: 11.5px;
+    color: var(--slate);
+    margin-top: 3px;
+  }
+
+  /* Register button */
+  .btn-register {
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+    letter-spacing: 0.3px;
+    animation: fadeUp 0.7s 0.72s both;
+  }
+
+  .btn-register::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(200, 168, 75, 0.25), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .btn-register:hover::before {
+    left: 160%;
+  }
+
+  .btn-register:hover {
+    background: var(--slate);
+    box-shadow: 0 6px 20px rgba(11, 31, 58, 0.22);
+    transform: translateY(-1px);
+  }
+
+  .btn-register:active {
+    transform: translateY(0);
+  }
+
+  /* Terms text */
+  .terms-text {
+    font-size: 12px;
+    color: var(--slate);
+    animation: fadeUp 0.7s 0.78s both;
+  }
+
+  .terms-text a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .terms-text a:hover {
+    text-decoration: underline;
+  }
+
+  /* Login link */
+  .login-link {
+    font-size: 13.5px;
+    color: var(--slate);
+    animation: fadeUp 0.7s 0.84s both;
+  }
+
+  .login-link a {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .login-link a:hover {
+    color: var(--navy);
+    text-decoration: underline;
+  }
+
+  /* OR divider */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.7s 0.66s both;
+  }
+
+  .or-divider span {
+    font-size: 12.5px;
+    color: #b0b8c8;
+    white-space: nowrap;
+  }
+
+  .or-divider::before,
+  .or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e8ef;
+  }
+
+  /* Social buttons */
+  .btn-social {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border: 1.5px solid #e0e4ed;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--navy);
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: border-color 0.22s, background 0.22s, transform 0.15s;
+    animation: fadeUp 0.7s 0.72s both;
+  }
+
+  .btn-social:hover {
+    border-color: var(--gold);
+    background: var(--cream);
+    transform: translateY(-1px);
+  }
+
+  /* Stagger animations for fields */
+  .anim-1 {
+    animation: fadeUp 0.7s 0.35s both;
+  }
+
+  .anim-2 {
+    animation: fadeUp 0.7s 0.40s both;
+  }
+
+  .anim-3 {
+    animation: fadeUp 0.7s 0.45s both;
+  }
+
+  .anim-4 {
+    animation: fadeUp 0.7s 0.50s both;
+  }
+
+  .anim-5 {
+    animation: fadeUp 0.7s 0.55s both;
+  }
+
+  .anim-6 {
+    animation: fadeUp 0.7s 0.60s both;
+  }
+
+  /* Mobile */
+  @media (max-width: 700px) {
+    .register-left {
+      display: none !important;
+    }
+
+    .register-right {
+      padding: 36px 24px;
+    }
+  }
+</style>
+
+<div class="register-section">
+  <div class="register-card row g-0">
+
+    <!-- ══ LEFT PANEL ══ -->
+    <div class="col-lg-4 register-left d-flex flex-column justify-content-center align-items-center text-center">
+
+      <div class="left-icon mb-3">🏡</div>
+
+      <h2 class="left-title mb-2">Join <span>House</span><br>Price Predictor</h2>
+      <p class="left-subtitle mb-4">Create your free account and start predicting house prices instantly.</p>
+
+      <!-- Steps -->
+      <div class="d-flex flex-column gap-2 w-100">
+        <div class="step-pill">
+          <span class="step-number">1</span> Fill your details
+        </div>
+        <div class="step-pill">
+          <span class="step-number">2</span> Create your account
+        </div>
+        <div class="step-pill">
+          <span class="step-number">3</span> Start predicting 🚀
+        </div>
+        <div class="step-pill">
+          <span class="step-number">4</span> Save your history 📊
+        </div>
+      </div>
+
+    </div>
+    <!-- ══ RIGHT PANEL ══ -->
+    <div class="col-lg-8 register-right d-flex flex-column justify-content-center">
+
+      <h3 class="form-headline mb-1">Create your account ✨</h3>
+      <p class="form-tagline mb-3">It's free — takes only 1 minute!</p>
+
+      <!-- Django messages -->
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-warning rounded-3 py-2 px-3 mb-3" style="font-size:13.5px;">
+         ⚠️ {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <!-- REGISTER FORM -->
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+
+        <!-- Row 1: First Name + Last Name -->
+        <div class="row g-3 mb-3">
+
+          <div class="col-sm-6 anim-1">
+            <label class="input-label mb-1 d-block" for="first_name">First Name</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">👤</span>
+              <input type="text" id="first_name" name="first_name" class="form-control py-2" placeholder="First name"
+                required autocomplete="given-name">
+            </div>
+          </div>
+
+          <div class="col-sm-6 anim-2">
+            <label class="input-label mb-1 d-block" for="last_name">Last Name</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">👤</span>
+              <input type="text" id="last_name" name="last_name" class="form-control py-2" placeholder="Last name"
+                required autocomplete="family-name">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Row 2: Username + Email -->
+        <div class="row g-3 mb-3">
+
+          <div class="col-sm-6 anim-3">
+            <label class="input-label mb-1 d-block" for="username">Phone</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">🪪</span>
+              <input type="number" id="username" name="phone" class="form-control py-2" placeholder="Enter phone no."
+                required autocomplete="username">
+            </div>
+          </div>
+
+          <div class="col-sm-6 anim-4">
+            <label class="input-label mb-1 d-block" for="email">Email Address</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">📧</span>
+              <input type="email" id="email" name="email" class="form-control py-2" placeholder="Your email" required
+                autocomplete="email">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Row 3: Password + Confirm Password -->
+        <div class="row g-3 mb-2">
+
+          <div class="col-sm-6 anim-5">
+            <label class="input-label mb-1 d-block" for="password1">Password</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">🔑</span>
+              <input type="password" id="password1" name="password1" class="form-control py-2"
+                placeholder="Create password" required autocomplete="new-password" oninput="checkStrength(this.value)">
+              <button type="button" class="btn-toggle-pw" onclick="togglePw('password1')" title="Show/hide">👁️</button>
+            </div>
+            <!-- Password strength bar -->
+            <div class="strength-bar-wrap mt-2">
+              <div class="strength-bar" id="strengthBar"></div>
+            </div>
+            <div class="strength-text" id="strengthText">Enter a password</div>
+          </div>
+
+          <div class="col-sm-6 anim-6">
+            <label class="input-label mb-1 d-block" for="password2">Confirm Password</label>
+            <div class="input-icon-wrap">
+              <span class="field-icon">🔒</span>
+              <input type="password" id="password2" name="password2" class="form-control py-2"
+                placeholder="Repeat password" required autocomplete="new-password" oninput="checkMatch()">
+              <button type="button" class="btn-toggle-pw" onclick="togglePw('password2')" title="Show/hide">👁️</button>
+            </div>
+            <div class="strength-text" id="matchText"></div>
+          </div>
+
+        </div>
+
+        <!-- Terms -->
+        <p class="terms-text mb-3">
+          By registering you agree to our
+          <a href="#">Terms of Service</a> and
+          <a href="#">Privacy Policy</a>.
+        </p>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-register btn w-100 mb-3">
+          🚀 Create My Account
+        </button>
+
+      </form>
+      <!-- OR divider -->
+      <div class="or-divider mb-3">
+        <span>or sign up with</span>
+      </div>
+
+      <!-- Login link -->
+      <p class="login-link text-center mb-0">
+        Already have an account? <a href="{% url 'login' %}">Login here →</a>
+      </p>
+
+    </div>
+    <!-- end right -->
+
+  </div>
+</div>
+
+<!-- ══ JS: Password toggle + strength + match ══ -->
+<script>
+  // Show / hide password
+  function togglePw(fieldId) {
+    const inp = document.getElementById(fieldId);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  // Password strength checker
+  function checkStrength(val) {
+    const bar = document.getElementById('strengthBar');
+    const text = document.getElementById('strengthText');
+
+    let score = 0;
+    if (val.length >= 8) score++;   // min 8 chars
+    if (/[A-Z]/.test(val)) score++;   // uppercase letter
+    if (/[0-9]/.test(val)) score++;   // number
+    if (/[^A-Za-z0-9]/.test(val)) score++;   // special char
+
+    const levels = [
+      { w: '0%', bg: '#e5e8ef', label: 'Enter a password' },
+      { w: '25%', bg: '#e74c3c', label: '😟 Weak' },
+      { w: '50%', bg: '#e67e22', label: '🙂 Fair' },
+      { w: '75%', bg: '#f1c40f', label: '😊 Good' },
+      { w: '100%', bg: '#2ecc71', label: '💪 Strong' },
+    ];
+
+    const lvl = val.length === 0 ? levels[0] : levels[score];
+    bar.style.width = lvl.w;
+    bar.style.background = lvl.bg;
+    text.textContent = lvl.label;
+  }
+
+  // Password match checker
+  function checkMatch() {
+    const p1 = document.getElementById('password1').value;
+    const p2 = document.getElementById('password2').value;
+    const text = document.getElementById('matchText');
+
+    if (p2.length === 0) {
+      text.textContent = '';
+      return;
+    }
+    if (p1 === p2) {
+      text.textContent = '✅ Passwords match!';
+      text.style.color = '#2ecc71';
+    } else {
+      text.textContent = '❌ Passwords do not match';
+      text.style.color = '#e74c3c';
+    }
+  }
+</script>
+
+{% endblock main %}

@@ -1,0 +1,399 @@
+{% extends "user_parent.html" %}
+
+{% block main %}
+
+<style>
+    .prediction-section {
+        padding: 36px 0 48px;
+    }
+
+    .prediction-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 32px 36px;
+        box-shadow: 0 4px 20px rgba(11, 31, 58, 0.09);
+        border-top: 3px solid var(--gold);
+    }
+
+    .prediction-title {
+        font-family: 'Source Serif 4', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--navy);
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .gold-divider {
+        width: 40px;
+        height: 2px;
+        background: var(--gold);
+        border-radius: 2px;
+        margin: 10px auto 6px;
+    }
+
+    .prediction-subtitle {
+        text-align: center;
+        font-size: 12.5px;
+        color: var(--slate);
+        margin-bottom: 24px;
+    }
+
+    .form-label {
+        font-family: 'Source Sans 3', sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--navy);
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-family: 'Source Sans 3', sans-serif;
+        border: 1px solid #dde1e7;
+        color: var(--navy);
+        background: #fdfdfd;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control::placeholder {
+        color: #aab0ba;
+        font-size: 12.5px;
+    }
+
+    .form-control:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(200, 168, 75, 0.15);
+        background: #fff;
+        outline: none;
+    }
+
+    .form-section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--slate);
+        border-bottom: 1px solid #eaecef;
+        padding-bottom: 6px;
+        margin-bottom: 4px;
+        margin-top: 8px;
+        grid-column: 1 / -1;
+    }
+
+    .predict-btn {
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        padding: 11px 0;
+        width: 100%;
+        border-radius: 6px;
+        font-family: 'Source Sans 3', sans-serif;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        transition: 0.25s;
+        cursor: pointer;
+        margin-top: 4px;
+    }
+
+    .predict-btn:hover {
+        background: var(--gold);
+        color: var(--navy);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(200, 168, 75, 0.28);
+    }
+
+    .result-box {
+        margin-top: 24px;
+        background: linear-gradient(135deg, var(--navy) 0%, #162d52 100%);
+        border-radius: 8px;
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        animation: fadeUp 0.6s ease both;
+    }
+
+    .result-box .result-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 4px;
+    }
+
+    .result-box .result-value {
+        font-family: 'Source Serif 4', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 0.5px;
+        line-height: 1;
+    }
+
+    .result-box .result-note {
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.45);
+        margin-top: 4px;
+    }
+
+    .result-icon {
+        width: 44px;
+        height: 44px;
+        background: rgba(200, 168, 75, 0.15);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .history-section {
+        margin-top: 32px;
+        margin-bottom: 48px;
+    }
+
+    .history-title {
+        font-family: 'Source Serif 4', serif;
+        color: var(--navy);
+        font-size: 17px;
+        margin-bottom: 6px;
+    }
+
+    @media (max-width: 768px) {
+        .prediction-card {
+            padding: 20px 16px;
+        }
+
+        .result-box {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+
+<div class="container prediction-section">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="prediction-card">
+
+                <h2 class="prediction-title">House Price Prediction</h2>
+                <div class="gold-divider"></div>
+                <p class="prediction-subtitle">Enter property details to get an estimated house price.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <p class="form-section-label">Property Details</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Median Income</label>
+                            <input type="text" name="medinc" class="form-control" placeholder="e.g. 3.5" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">House Age</label>
+                            <input type="text" name="houseage" class="form-control" placeholder="e.g. 20" required>
+                        </div>
+
+                        <div class="col-12 mt-1">
+                            <p class="form-section-label">Room Information</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Average Rooms</label>
+                            <input type="text" name="averooms" class="form-control" placeholder="e.g. 5.2" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Average Bedrooms</label>
+                            <input type="text" name="avebedrms" class="form-control" placeholder="e.g. 1.2" required>
+                        </div>
+
+                        <div class="col-12 mt-1">
+                            <p class="form-section-label">Population & Occupancy</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Population</label>
+                            <input type="text" name="population" class="form-control" placeholder="e.g. 1200" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Average Occupancy</label>
+                            <input type="text" name="aveoccup" class="form-control" placeholder="e.g. 3.1" required>
+                        </div>
+
+                        <div class="col-12 mt-1">
+                            <p class="form-section-label">Location</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Latitude</label>
+                            <input type="text" name="latitude" class="form-control" placeholder="e.g. 34.05" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Longitude</label>
+                            <input type="text" name="longitude" class="form-control" placeholder="e.g. -118.24"
+                                required>
+                        </div>
+
+                        <div class="col-12 mt-2">
+                            <button type="submit" class="predict-btn">
+                                Predict House Price
+                            </button>
+                        </div>
+
+                        <!-- RESULT BOX — id lagaya taaki JS hide kar sake -->
+                        {% if res %}
+                        <div class="col-12" id="result-box-wrapper">
+                            <div class="result-box">
+                                <div>
+                                    <div class="result-label">Estimated House Price</div>
+                                    <div class="result-value">$ {{ res|floatformat:2 }}</div>
+                                    <div class="result-note">Based on provided property details</div>
+                                </div>
+                                <div class="result-icon">🏠</div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- HISTORY TABLE -->
+<div class="container history-section" id="history-section" style="display:none;">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+            <h5 class="history-title">Prediction History</h5>
+            <div style="width:40px;height:2px;background:var(--gold);margin-bottom:16px;border-radius:2px;"></div>
+            <div style="overflow-x:auto;">
+                <table class="table table-bordered table-hover" style="font-size:13px;">
+                    <thead style="background:var(--navy);color:#fff;">
+                        <tr>
+                            <th>#</th>
+                            <th>Income</th>
+                            <th>Age</th>
+                            <th>Rooms</th>
+                            <th>Bedrooms</th>
+                            <th>Population</th>
+                            <th>Occupancy</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Predicted Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // ── Jab page chhodo (dusre page par jao) — sab clear karo ──
+    window.addEventListener('beforeunload', function () {
+        if (!sessionStorage.getItem('formSubmitting')) {
+            sessionStorage.removeItem('predHistory');
+            sessionStorage.removeItem('pendingData');
+        }
+    });
+
+    // ── Form submit hone SE PEHLE data save karo ──
+    document.querySelector('form').addEventListener('submit', function () {
+        sessionStorage.setItem('formSubmitting', 'yes');
+        const data = {
+            medinc: document.querySelector('[name="medinc"]').value,
+            houseage: document.querySelector('[name="houseage"]').value,
+            averooms: document.querySelector('[name="averooms"]').value,
+            avebedrms: document.querySelector('[name="avebedrms"]').value,
+            population: document.querySelector('[name="population"]').value,
+            aveoccup: document.querySelector('[name="aveoccup"]').value,
+            latitude: document.querySelector('[name="latitude"]').value,
+            longitude: document.querySelector('[name="longitude"]').value,
+        };
+        sessionStorage.setItem('pendingData', JSON.stringify(data));
+    });
+
+    // ── Page load hone par ──
+    const predictedPrice = "{% if res %}{{ res|floatformat:2 }}{% endif %}";
+    const pendingData = JSON.parse(sessionStorage.getItem('pendingData') || 'null');
+    const wasSubmitting = sessionStorage.getItem('formSubmitting');
+
+    // Flag hata do
+    sessionStorage.removeItem('formSubmitting');
+
+    // ── MAIN FIX: Reload detect karo ──
+    // Agar formSubmitting flag NAHI tha matlab reload hua — sab clear karo
+    if (!wasSubmitting) {
+        sessionStorage.removeItem('predHistory');
+        sessionStorage.removeItem('pendingData');
+
+        // Result box bhi hide karo
+        const resultBox = document.getElementById('result-box-wrapper');
+        if (resultBox) resultBox.style.display = 'none';
+
+    } else {
+        // Form submit tha — price aur data milao
+        if (predictedPrice && pendingData) {
+            pendingData.price = predictedPrice;
+            let history = JSON.parse(sessionStorage.getItem('predHistory') || '[]');
+            history.push(pendingData);
+            sessionStorage.setItem('predHistory', JSON.stringify(history));
+            sessionStorage.removeItem('pendingData');
+        }
+    }
+
+    // ── Table banao ──
+    const history = JSON.parse(sessionStorage.getItem('predHistory') || '[]');
+    if (history.length > 0) {
+        document.getElementById('history-section').style.display = 'block';
+        const tbody = document.getElementById('history-body');
+        tbody.innerHTML = '';
+        history.forEach(function (r, i) {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${r.medinc}</td>
+                    <td>${r.houseage}</td>
+                    <td>${r.averooms}</td>
+                    <td>${r.avebedrms}</td>
+                    <td>${r.population}</td>
+                    <td>${r.aveoccup}</td>
+                    <td>${r.latitude}</td>
+                    <td>${r.longitude}</td>
+                    <td style="color:var(--gold);font-weight:700;">$ ${r.price}</td>
+                </tr>`;
+        });
+
+        // Table par smooth scroll karo
+        setTimeout(function () {
+            document.getElementById('history-section').scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+    }
+</script>
+
+{% endblock main %}

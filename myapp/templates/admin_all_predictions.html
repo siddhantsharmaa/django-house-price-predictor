@@ -1,0 +1,219 @@
+{% extends 'admin_parent.html' %}
+{% block main %}
+
+<style>
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dash-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        border: 0.5px solid rgba(0, 0, 0, 0.08);
+        animation: fadeUp 0.5s ease both;
+    }
+
+    .pred-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    .pred-table thead tr {
+        background: #0b1f3a;
+        color: #fff;
+    }
+
+    .pred-table thead th {
+        padding: 10px 12px;
+        font-weight: 500;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    .pred-table thead th:first-child {
+        border-radius: 10px 0 0 0;
+    }
+
+    .pred-table thead th:last-child {
+        border-radius: 0 10px 0 0;
+    }
+
+    .pred-table tbody tr {
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+        transition: background 0.2s;
+        animation: fadeUp 0.4s ease both;
+    }
+
+    .pred-table tbody tr:hover {
+        background: #f8f4ee;
+    }
+
+    .pred-table tbody td {
+        padding: 10px 12px;
+        color: var(--navy);
+    }
+
+    .price-badge {
+        background: #0b1f3a;
+        color: #c8a84b;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .user-badge {
+        background: #f8f4ee;
+        color: #0b1f3a;
+        border-radius: 20px;
+        padding: 3px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #0b1f3a;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .back-btn:hover {
+        opacity: 0.8;
+        color: white;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        font-size: 13px;
+        margin-bottom: 16px;
+        outline: none;
+    }
+
+    #searchInput:focus {
+        border-color: #c8a84b;
+    }
+</style>
+
+<!-- Back Button -->
+<div class="mt-4 mb-3" style="animation: fadeUp 0.3s ease both;">
+    <a href="{% url 'admin_panel' %}" class="back-btn">
+        <i class="bi bi-arrow-left"></i> Back to Admin Panel
+    </a>
+</div>
+
+<!-- Header -->
+<div class="row mb-3" style="animation: fadeUp 0.4s ease both;">
+    <div class="col-12">
+        <h4 style="color:var(--navy);">
+            <i class="bi bi-graph-up" style="color:#c8a84b;"></i> All Predictions
+        </h4>
+        <p style="color:var(--slate); font-size:14px;">
+            Total: <strong>{{ all_predictions.count }}</strong> predictions
+        </p>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="dash-card">
+
+            <!-- Search -->
+            <input type="text" id="searchInput" placeholder="🔍 Search by user name..." onkeyup="searchPredictions()">
+
+            <div style="overflow-x:auto;">
+                <table class="pred-table">
+                    <thead>
+                        <tr>
+                            <th><i class="bi bi-hash" style="color:#c8a84b;"></i></th>
+                            <th><i class="bi bi-person" style="color:#c8a84b;"></i> User</th>
+                            <th><i class="bi bi-cash-coin" style="color:#c8a84b;"></i> Income</th>
+                            <th><i class="bi bi-building" style="color:#c8a84b;"></i> Age</th>
+                            <th><i class="bi bi-door-open" style="color:#c8a84b;"></i> Rooms</th>
+                            <th><i class="bi bi-safe" style="color:#c8a84b;"></i> Bedrooms</th>
+                            <th><i class="bi bi-people" style="color:#c8a84b;"></i> Population</th>
+                            <th><i class="bi bi-house-check" style="color:#c8a84b;"></i> Occupancy</th>
+                            <th><i class="bi bi-tags" style="color:#c8a84b;"></i> Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="predBody">
+                        {% for p in all_predictions %}
+                        <tr style="animation-delay:{{ forloop.counter0 }}0ms;">
+                            <td><span style="background:#0b1f3a; color:#c8a84b;
+                                            border-radius:6px; padding:2px 8px;
+                                            font-size:12px;">
+                                    #{{ forloop.counter }}
+                                </span></td>
+                            <td>
+                                {% if p.user %}
+                                <a href="{% url 'admin_user_detail' p.user.id %}" style="text-decoration:none;">
+                                    <span class="user-badge">
+                                        {{ p.user.first_name }} {{ p.user.last_name }}
+                                    </span>
+                                </a>
+                                {% else %}
+                                <span class="user-badge">
+                                    User Not Found
+                                </span>
+                                {% endif %}
+                            </td>
+                            </td>
+                            <td>{{ p.medinc }}</td>
+                            <td>{{ p.houseage }}</td>
+                            <td>{{ p.averooms }}</td>
+                            <td>{{ p.avebedrms }}</td>
+                            <td>{{ p.population }}</td>
+                            <td>{{ p.aveoccup }}</td>
+                            <td><span class="price-badge">
+                                    ${{ p.res|floatformat:0 }}
+                                </span></td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" style="text-align:center; padding:30px; color:var(--slate);">
+                                No predictions found!
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function searchPredictions() {
+        var input = document.getElementById('searchInput').value.toLowerCase();
+        var rows = document.querySelectorAll('#predBody tr');
+        rows.forEach(function (row) {
+            var text = row.innerText.toLowerCase();
+            row.style.display = text.includes(input) ? '' : 'none';
+        });
+    }
+</script>
+
+{% endblock main %}

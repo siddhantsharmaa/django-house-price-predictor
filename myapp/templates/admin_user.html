@@ -1,0 +1,159 @@
+{% extends 'admin_parent.html' %}
+{% block main %}
+
+<style>
+    @keyframes fadeUp {
+        from { opacity:0; transform:translateY(16px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
+    .dash-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        border: 0.5px solid rgba(0,0,0,0.08);
+        animation: fadeUp 0.5s ease both;
+    }
+    .info-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--slate);
+        padding: 7px 0;
+        border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row i { color: #c8a84b; }
+    .info-val { margin-left:auto; font-weight:600; color:var(--navy); font-size:13px; }
+    .pred-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 0.5px solid rgba(0,0,0,0.06);
+        animation: fadeUp 0.4s ease both;
+        font-size: 13px;
+    }
+    .pred-row:last-child { border-bottom: none; }
+    .price-badge {
+        background: #0b1f3a;
+        color: #c8a84b;
+        border-radius: 20px;
+        padding: 3px 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #0b1f3a;
+        color: white;
+        padding: 8px 18px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+    .back-btn:hover { opacity: 0.8; color: white; }
+</style>
+
+<!-- Back Button -->
+<div class="mt-4" style="animation: fadeUp 0.3s ease both;">
+    <a href="{% url 'admin_panel' %}" class="back-btn">
+        <i class="bi bi-arrow-left"></i> Back to Admin Panel
+    </a>
+</div>
+
+<!-- User Profile + Predictions -->
+<div class="row mt-3 gy-3 align-items-stretch">
+
+    <!-- Profile Card -->
+    <div class="col-lg-4 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.1s; width:100%;">
+
+            <h6 style="color:var(--navy); margin-bottom:14px;">
+                <i class="bi bi-person-circle" style="color:#c8a84b;"></i> User Profile
+            </h6>
+
+            <!-- Avatar -->
+            <div style="text-align:center; margin-bottom:16px;">
+                {% if user_profile.photo %}
+                    <img src="{{ user_profile.photo.url }}"
+                         style="width:86px; height:86px; border-radius:50%;
+                                object-fit:cover; border:3px solid #c8a84b;">
+                {% else %}
+                    <div style="width:86px; height:86px; border-radius:50%;
+                                background:#0b1f3a; color:#c8a84b;
+                                display:flex; align-items:center;
+                                justify-content:center; font-size:32px;
+                                font-weight:700; margin:0 auto;
+                                border:3px solid #c8a84b;">
+                        {{ user_obj.first_name|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Info -->
+            <div class="info-row">
+                <i class="bi bi-person"></i> Name
+                <span class="info-val">
+                    {{ user_obj.first_name }} {{ user_obj.last_name }}
+                </span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-envelope"></i> Email
+                <span class="info-val">{{ user_obj.email }}</span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-phone"></i> Phone
+                <span class="info-val">{{ user_profile.phone }}</span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-graph-up"></i> Total Predictions
+                <span class="info-val">{{ predictions.count }}</span>
+            </div>
+            <div class="info-row">
+                <i class="bi bi-calendar"></i> Joined
+                <span class="info-val">{{ user_obj.date_joined|date:"d M Y" }}</span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Predictions Card -->
+    <div class="col-lg-8 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.2s; width:100%;">
+
+            <h6 style="color:var(--navy); margin-bottom:14px;">
+                <i class="bi bi-clock-history" style="color:#c8a84b;"></i>
+                All Predictions
+            </h6>
+
+            {% for p in predictions %}
+            <div class="pred-row" style="animation-delay:{{ forloop.counter0 }}00ms;">
+                <div>
+                    <div style="font-weight:600; color:var(--navy); font-size:13px;">
+                        Prediction #{{ forloop.counter }}
+                    </div>
+                    <div style="font-size:11px; color:var(--slate);">
+                        Income: {{ p.medinc }} |
+                        Age: {{ p.houseage }} |
+                        Rooms: {{ p.averooms }}
+                    </div>
+                </div>
+                <span class="price-badge">${{ p.res|floatformat:0 }}</span>
+            </div>
+            {% empty %}
+                <p style="color:var(--slate); text-align:center; padding:20px;">
+                    No predictions yet!
+                </p>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock main %}

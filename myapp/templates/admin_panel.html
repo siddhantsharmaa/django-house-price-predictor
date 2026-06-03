@@ -1,0 +1,220 @@
+{% extends 'admin_parent.html' %}
+{% block main %}
+
+<style>
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dash-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        border: 0.5px solid rgba(0, 0, 0, 0.08);
+        width: 100%;
+        animation: fadeUp 0.5s ease both;
+        transition: border-color 0.3s;
+    }
+
+    .dash-card:hover {
+        border-color: #c8a84b;
+    }
+
+    .stat-num {
+        font-size: 38px;
+        font-weight: 700;
+        color: #c8a84b;
+    }
+
+    .user-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+        animation: fadeUp 0.4s ease both;
+        transition: background 0.2s;
+        border-radius: 8px;
+    }
+
+    .user-row:hover {
+        background: #f8f4ee;
+        padding-left: 8px;
+    }
+
+    .avatar-sm {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #0b1f3a;
+        color: #c8a84b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        flex-shrink: 0;
+        border: 2px solid #c8a84b;
+    }
+
+    .badge-pred {
+        background: #0b1f3a;
+        color: #c8a84b;
+        border-radius: 20px;
+        padding: 2px 10px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .view-btn {
+        margin-left: auto;
+        background: #c8a84b;
+        color: #0b1f3a;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .view-btn:hover {
+        opacity: 0.8;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        font-size: 13px;
+        margin-bottom: 16px;
+        outline: none;
+    }
+
+    #searchInput:focus {
+        border-color: #c8a84b;
+    }
+</style>
+
+<!-- Header -->
+<div class="row mt-4" style="animation: fadeUp 0.3s ease both;">
+    <div class="col-12">
+        <h4 style="color:var(--navy);">
+            <i class="bi bi-shield-lock"></i> Admin Panel
+        </h4>
+        <p style="color:var(--slate); font-size:14px;">
+            Manage all users and their predictions.
+        </p>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mt-3 gy-3">
+    <div class="col-lg-3 col-md-6 d-flex">
+        <div class="dash-card" style="animation-delay:0.1s;">
+            <div style="font-size:12px; color:var(--slate); margin-bottom:6px;">
+                <i class="bi bi-people" style="color:#c8a84b;"></i> Total Users
+            </div>
+            <div class="stat-num">{{ total_users }}</div>
+        </div>
+    </div>
+    <!-- Total Predictions Card — clickable -->
+    <div class="col-lg-3 col-md-6 d-flex">
+        <a href="{% url 'admin_all_predictions' %}" style="text-decoration:none; width:100%;">
+            <!-- 👈 link wrap karo -->
+            <div class="dash-card" style="animation-delay:0.2s; cursor:pointer;">
+                <div style="font-size:12px; color:var(--slate); margin-bottom:6px;">
+                    <i class="bi bi-graph-up" style="color:#c8a84b;"></i> Total Predictions
+                    <i class="bi bi-arrow-right-circle" style="float:right; color:#c8a84b;"></i> <!-- 👈 arrow icon -->
+                </div>
+                <div class="stat-num">{{ total_predictions }}</div>
+                <div style="font-size:11px; color:var(--slate); margin-top:4px;">
+                    Click to view all
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- Users Table -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="dash-card" style="animation-delay:0.3s;">
+
+                <h6 style="color:var(--navy); margin-bottom:14px;">
+                    <i class="bi bi-people" style="color:#c8a84b;"></i> All Users
+                </h6>
+
+                <!-- Search -->
+                <input type="text" id="searchInput" placeholder="🔍 Search by name or email..." onkeyup="searchUsers()">
+
+                <!-- Users List -->
+                <div id="usersList">
+                    {% for up in all_users %}
+                    <div class="user-row" style="animation-delay:{{ forloop.counter0 }}00ms">
+
+                        <!-- Avatar -->
+                        {% if up.photo %}
+                        <img src="{{ up.photo.url }}" style="width:42px; height:42px; border-radius:50%;
+                                    object-fit:cover; border:2px solid #c8a84b;">
+                        {% else %}
+                        <div class="avatar-sm">
+                            {{ up.user.first_name|first|upper }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Name + Email -->
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-size:14px; font-weight:600; color:var(--navy);">
+                                {{ up.user.first_name }} {{ up.user.last_name }}
+                            </div>
+                            <div style="font-size:12px; color:var(--slate);">
+                                {{ up.user.email }}
+                            </div>
+                        </div>
+
+                        <!-- Predictions count -->
+                        <span class="badge-pred">
+                            {{ up.user.price_prediction_set.count }} predictions
+                        </span>
+
+                        <!-- View Button -->
+                        <a href="{% url 'admin_user_detail' up.user.id %}" class="view-btn">
+                            <i class="bi bi-eye"></i> View
+                        </a>
+
+                    </div>
+                    {% empty %}
+                    <p style="color:var(--slate); text-align:center; padding:20px;">
+                        No users found!
+                    </p>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Search JavaScript -->
+    <script>
+        function searchUsers() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var rows = document.querySelectorAll('.user-row');
+            rows.forEach(function (row) {
+                var text = row.innerText.toLowerCase();
+                row.style.display = text.includes(input) ? 'flex' : 'none';
+            });
+        }
+    </script>
+
+    {% endblock main %}
