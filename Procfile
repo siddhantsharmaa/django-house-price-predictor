@@ -1,0 +1,1 @@
+web: gunicorn hpp_project.wsgi:application

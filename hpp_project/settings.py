@@ -124,3 +124,22 @@ STATICFILES_DIRS = [
 
 MEDIA_URL  = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# ✅ Debug band karo production mein
+DEBUG = False
+
+# ✅ Allowed hosts
+ALLOWED_HOSTS = ['*']
+
+# ✅ Static files
+STATIC_URL  = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# ✅ Database — Railway ka PostgreSQL use karo
+import dj_database_url
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3'
+    )
+}
