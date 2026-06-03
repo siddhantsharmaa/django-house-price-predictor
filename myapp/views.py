@@ -11,8 +11,16 @@ from django.core.exceptions import PermissionDenied
 import os 
 import joblib
 import pandas as pd
-path = os.path.dirname(__file__)
-model = joblib.load(open(os.path.join(path, "house_price_model.pkl"),"rb"))
+
+_model = None
+
+def get_model():
+    """Load the model lazily on first use and cache it in _model."""
+    global _model
+    if _model is None:
+        path = os.path.dirname(__file__)
+        _model = joblib.load(os.path.join(path, "house_price_model.pkl"))
+    return _model
 
 # Create your views here.
 
@@ -33,7 +41,7 @@ def prediction(req):
         aveoccup = req.POST['aveoccup']
         latitude = req.POST['latitude']
         longitude = req.POST['longitude']
-        res = model.predict([[medinc, houseage, averooms, avebedrms, population, aveoccup, latitude, longitude]])[0].round(2)
+        res = get_model().predict([[medinc, houseage, averooms, avebedrms, population, aveoccup, latitude, longitude]])[0].round(2)
         res = res*100000
         hpp = Price_Prediction( user = req.user, medinc = medinc, houseage = houseage, averooms = averooms, avebedrms = avebedrms, population = population, aveoccup = aveoccup, latitude = latitude, longitude = longitude, res = res)
         hpp.save()
