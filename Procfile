@@ -1,1 +1,1 @@
-web: gunicorn hpp_project.wsgi:application
+web: python generate_model.py && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn hpp_project.wsgi
