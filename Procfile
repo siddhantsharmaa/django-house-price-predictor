@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn hpp_project.wsgi
+web: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn hpp_project.wsgi:application
