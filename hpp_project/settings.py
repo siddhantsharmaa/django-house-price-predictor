@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'myapp',
     'cloudinary',
-    'cloudinary_storage',
+
 ]
 
 # ✅ Cloudinary settings
