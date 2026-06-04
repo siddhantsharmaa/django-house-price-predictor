@@ -218,7 +218,7 @@ def admin_required(view_func):
 def admin_panel(req):
     tab = 'admin'
     
-    total_users       = User.objects.count()
+    total_users       = User.objects.filter(is_staff=False).count()
     total_predictions = Price_Prediction.objects.count()
     all_users         = UserProfile.objects.select_related('user').all()
     
