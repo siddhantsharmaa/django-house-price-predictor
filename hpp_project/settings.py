@@ -132,7 +132,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEBUG = False
 
 # ✅ Allowed hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['django-hpp.up.railway.app', 'localhost', '127.0.0.1']
+
+# ✅ CSRF settings — required for form submissions on Railway
+CSRF_TRUSTED_ORIGINS = ['https://django-hpp.up.railway.app']
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = False
+SESSION_COOKIE_SECURE = True
 
 # ✅ Static files
 STATIC_URL  = '/static/'
