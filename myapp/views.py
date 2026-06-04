@@ -127,37 +127,40 @@ def register(req):
         return redirect('login')
 
     return render(req, 'register.html', {'tab': tab})
-
 @login_required(login_url='login')
 def dashboard(req):
-    tab = 'dashboard'
-    
-    # User ki profile lo
+    print("STEP 1")
+
     user_profile = UserProfile.objects.get(user=req.user)
-    
-    # ✅ Debug — URL check karo
+
+    print("STEP 2")
+
     if user_profile.photo:
         print("Photo URL:", user_profile.photo.url)
-    else:
-        print("No photo!")
-    
-    # User ki saari predictions lo
-    predictions = Price_Prediction.objects.filter(user=req.user)
-    
-    # Total kitni predictions ki
-    total_predictions = predictions.count()
-    
-    # Last prediction
-    last_prediction = predictions.last()
-    
-    context = {
-        'tab'              : tab,
-        'user_profile'     : user_profile,
-        'total_predictions': total_predictions,
-        'last_prediction'  : last_prediction,
-    }
-    return render(req, 'dashboard.html', context)
 
+    print("STEP 3")
+
+    predictions = Price_Prediction.objects.filter(user=req.user)
+
+    print("STEP 4")
+
+    total_predictions = predictions.count()
+
+    print("STEP 5")
+
+    last_prediction = predictions.last()
+
+    print("STEP 6")
+
+    context = {
+        'user_profile': user_profile,
+        'total_predictions': total_predictions,
+        'last_prediction': last_prediction,
+    }
+
+    print("STEP 7")
+
+    return render(req, 'dashboard.html', context)
 def user_logout(req):
     is_admin = req.user.is_staff  #  pehle check karo — admin hai?
     req.session.flush()
