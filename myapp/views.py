@@ -135,6 +135,12 @@ def dashboard(req):
     # User ki profile lo
     user_profile = UserProfile.objects.get(user=req.user)
     
+    # ✅ Debug — URL check karo
+    if user_profile.photo:
+        print("Photo URL:", user_profile.photo.url)
+    else:
+        print("No photo!")
+    
     # User ki saari predictions lo
     predictions = Price_Prediction.objects.filter(user=req.user)
     
@@ -162,13 +168,18 @@ def user_logout(req):
     else:
         return redirect('login')      # 👈 normal user login pe bhejo
     
+    
 @login_required(login_url='login')
 def update_photo(req):
     if req.method == 'POST':
         user_profile = UserProfile.objects.get(user=req.user)
         
-        #  Photo form se lo
         if 'photo' in req.FILES:
+            # ✅ Purani photo delete karo Cloudinary se
+            if user_profile.photo:
+                user_profile.photo.delete(save=False)
+            
+            # ✅ Nai photo save karo
             user_profile.photo = req.FILES['photo']
             user_profile.save()
             messages.success(req, 'Profile picture updated!')
