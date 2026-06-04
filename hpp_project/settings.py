@@ -140,6 +140,11 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_HTTPONLY = False
 SESSION_COOKIE_SECURE = True
 
+
+DJANGO_SUPERUSER_USERNAME = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
+DJANGO_SUPERUSER_EMAIL    = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@gmail.com')
+DJANGO_SUPERUSER_PASSWORD = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin')
+
 # ✅ Static files
 STATIC_URL  = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
