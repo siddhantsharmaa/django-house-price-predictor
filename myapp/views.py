@@ -127,40 +127,31 @@ def register(req):
         return redirect('login')
 
     return render(req, 'register.html', {'tab': tab})
+
 @login_required(login_url='login')
 def dashboard(req):
-    print("STEP 1")
-
+    tab = 'dashboard'
+    
+    # User ki profile lo
     user_profile = UserProfile.objects.get(user=req.user)
-
-    print("STEP 2")
-
-    if user_profile.photo:
-        print("Photo URL:", user_profile.photo.url)
-
-    print("STEP 3")
-
+    
+    # User ki saari predictions lo
     predictions = Price_Prediction.objects.filter(user=req.user)
-
-    print("STEP 4")
-
+    
+    # Total kitni predictions ki
     total_predictions = predictions.count()
-
-    print("STEP 5")
-
+    
+    # Last prediction
     last_prediction = predictions.last()
-
-    print("STEP 6")
-
+    
     context = {
-        'user_profile': user_profile,
+        'tab'              : tab,
+        'user_profile'     : user_profile,
         'total_predictions': total_predictions,
-        'last_prediction': last_prediction,
+        'last_prediction'  : last_prediction,
     }
-
-    print("STEP 7")
-
     return render(req, 'dashboard.html', context)
+
 def user_logout(req):
     is_admin = req.user.is_staff  #  pehle check karo — admin hai?
     req.session.flush()
@@ -171,24 +162,35 @@ def user_logout(req):
     else:
         return redirect('login')      # 👈 normal user login pe bhejo
     
-    
 @login_required(login_url='login')
 def update_photo(req):
     if req.method == 'POST':
+        print("UPLOAD STEP 1")
+
         user_profile = UserProfile.objects.get(user=req.user)
-        
+
+        print("UPLOAD STEP 2")
+
         if 'photo' in req.FILES:
-            # ✅ Purani photo delete karo Cloudinary se
+
+            print("UPLOAD STEP 3")
+
             if user_profile.photo:
+                print("UPLOAD STEP 4 - deleting old photo")
                 user_profile.photo.delete(save=False)
-            
-            # ✅ Nai photo save karo
+
+            print("UPLOAD STEP 5 - assigning new photo")
+
             user_profile.photo = req.FILES['photo']
+
+            print("UPLOAD STEP 6 - saving")
+
             user_profile.save()
+
+            print("UPLOAD STEP 7 - saved")
+
             messages.success(req, 'Profile picture updated!')
-        else:
-            messages.error(req, 'Koi photo select nahi ki!')
-            
+
         return redirect('dashboard')
     
 def admin_login(req):
